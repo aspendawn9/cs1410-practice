@@ -1,90 +1,103 @@
+// CS1410 - Assignment 03
 #include <iostream>
-#include <iomanip>
-#include <random>
-#include <string>
-#include <sstream>
-
+#include <iomanip>  
 using namespace std;
 
-enum class Side{ //lists the sides of the die
-    One, Two, Three, Four, Five, Six
-};
- 
-// represents a bar in a histogram
-struct HistBar{
-    int count;
-    Side label;
+//TODO 1: ShapeKind Enumeration goes here
+enum class ShapeKind{
+    Circle, Square, Rectangle
 };
 
-default_random_engine en;
-uniform_int_distribution<> dist{1, 2, 3, 4, 5, 6};
+//TODO 2: Shape Structure goes here
+struct Shape{
+    ShapeKind kind;
+    double length;
+    double width;
+};
 
-
-
-// define a function prototype to simulate rolling the dice and store the values
-void rollDice(HistBar h[], int n = 1);
-
-// create a function that resets the count member of every bar in h to 0
-void reset(HistBar h[]);
-
-
-
-int main(){
-    
-    
-    // create an array of HistBars with count 0 and each with the correct side
-    HistBar hist[6] = {{0, Side::One},{0, Side::Two}, {0, Side::Three}, {0, Side::Four}, {0, Side::Five}, {0, Side::Six}};
-
-    // define a function prototype to simulate rolling the dice and store the values
-    void rollDice(HistBar h[], int n = 1){
-        hist[r(en)]++;
-    };
-
-    // create a function that resets the count member of every bar in h to 0
-    void reset(HistBar h[]){
-        h.count = 0;
-    }; 
-
-    
-
-    // define a function to build the histogram
-    string histogram(HistBar h[], char c = '*'){
-    stringstream sout;
-    sout << "ONE: " << histogram(h[0],c) << hist.count[0] << endl;
-    sout << "TWO: " << histogram(h[1],c) << hist.count[1] << endl;
-    sout << "THREE: " << histogram(h[2],c) << hist.count[2] << endl;
-    sout << "FOUR: " << histogram(h[3],c) << hist.count[3] << endl;
-    sout << "FIVE: " << histogram(h[4],c) << hist.count[4] << endl;
-    sout << "SIX: " << histogram(h[5],c) << hist.count[5] << endl;
+// Function prototypes and definitions
+//TODO 3: area() definition goes here
+double area(Shape s){
+    if (s.kind == ShapeKind::Circle){
+        return (s.length/2)*(s.length/2)*3.14159;
+    }else{
+        return s.length * s.width;
     }
 
+}
 
-    // initialize an integer that will be used to take in options from the user
-    int x;
 
-    // create a do while loop that outputs the menu options 
-    do{
-        cout << "DICE ROLLING SIMULATION" << endl;
-        cout << "=======================" << endl;
-        cout << 1 << ". Roll Dice" << endl;
-        cout << 2 << ". Display Histogram" << endl;
-        cout << 3 << ". Reset Histogram" << endl;
-        cout << 4 << ". Quit Program" << endl;
 
-        //take in a choice from the user
-        cin >> x;
+//TODO 4: perimeter() definition goes here
+double perimeter(Shape s){
+    if (s.kind == ShapeKind::Circle){
+        return s.length * 3.14159;
+    }else{
+        return (2 * s.length) + (2 * s.width);
+    }
+}
 
-        if(x == 1){
-            rollDice(100)
-        }else if(x == 2){
-            cout << histogram << endl;
-        } else if(x ==3){
-            reset(h[])
-        }else{
-            break;
+
+//TODO 5: nameOf() definition goes here
+string nameOf(Shape s){
+    if(s.kind == ShapeKind::Circle){
+        return "Circle";
+    }else if(s.kind == ShapeKind::Rectangle){
+        return "Rectangle";
+    }else{
+        return "Square";
+    }
+
+}
+
+
+//TODO 6: promptAndReadInputFor() definition goes here
+void promptAndReadInputFor(Shape& s){
+    if (s.kind == ShapeKind::Circle){
+        double clen;
+        cout << "Enter the diameter of a circle: " << endl;
+        cin >> s.length;
+        s.width = s.length;
+    }else if(s.kind == ShapeKind::Rectangle){
+        double rlen;
+        double rwidth;
+        cout << "Enter the length of the rectangle: " << endl;
+        cin >> s.length;
+        cout << "Enter the width of the rectangle: " << endl;
+        cin >> s.width;
+        if (s.length == s.width){
+            s.kind = ShapeKind::Square;
         }
+    }else if (s.kind == ShapeKind::Square){
+        cout << "Enter the length of the square: " << endl;
+        cin >> s.length;
+        s.width = s.length;
+    }
 
-    }while(x != 4);
-    
-    return 0;
+}
+
+// The main function
+int main() {
+  // Shape objects
+  Shape circle = { ShapeKind::Circle, 0, 0 };
+  //TODO 7: define two more shape objects: a square and and a rectangle 
+  Shape square ={ShapeKind::Square,0.0,0.0};
+  Shape rectangle ={ShapeKind::Rectangle,0.0,0.0};
+
+
+  //TODO 8: Call the promptAndReadInputFor() function on each of the above three shapes
+  promptAndReadInputFor(circle);
+  promptAndReadInputFor(square);
+  promptAndReadInputFor(rectangle);
+
+  
+
+  //TODO 9: Print a out a report of these shapes in a table-like format
+ cout << "Shape" << setw(8) << "Width" << setw(16) << "Perimeter" << setw(8) << "Area" << endl;
+ cout << nameOf(circle) << setw(6) << circle.width << setw(14) << perimeter(circle) << setw(14) << area(circle) << endl;
+ cout << nameOf(square) << setw(6) << square.width << setw(10) << perimeter(square) << setw(14) << area(square) << endl;
+ cout << nameOf(rectangle) << setw(3) << rectangle.width << setw(12) << perimeter(rectangle) << setw(12) << area(rectangle) << endl;
+
+
+  return 0;
 }
